@@ -1,0 +1,26 @@
+<script>
+    function sumAsync(val1, val2){
+        return new Promise((resolve, reject) => {
+            setTimeout(function() {
+                resolve(val1 + val2);
+            }, 1000);
+        });
+    }
+
+    let num1 = 10;
+    let num2 = 5;
+
+    let contador = 1;
+
+    sumAsync(num1, num2).then(function useSuma(res){
+        console.log(res);
+        num1++;
+        contador++;
+        if(contador <= 10) {
+            sumAsync(num1, num2).then(useSuma);
+        }else{
+            console.log('fin de proceso');
+        }
+    });
+
+</script>

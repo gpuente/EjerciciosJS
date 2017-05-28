@@ -1,0 +1,369 @@
+<script>
+    console.log('******** EJERCICIOS JS Y ES6 ********');
+    /*
+    * ----------------------------------------------------------
+    * Referencias:
+    * ----------------------------------------------------------
+    * https://carlosazaustre.es/blog/ecmascript-6-el-nuevo-estandar-de-javascript/
+    * http://digitta.com/2008/03/clausuras-javascript-para-torpes.html
+    * http://codehero.co/javascript-desmitificado-clausuras/
+    * https://developer.mozilla.org/es/docs/Web/JavaScript/Closures
+    * http://www.enrique7mc.com/2016/05/call-apply-y-bind-en-javascript/
+    */
+
+
+
+    // Notas: el valor de this en JS es dinamico, siempre tiene el valor del objeto que lo invoca (ambito actual), 
+    // por lo tanto no funciona al igual que en otros lenguajes, en dónde this siempre referencia al objeto
+    // en dónde se llamó.
+
+    // this siempre tiene el valor del ámbito actual!
+
+    // Las arrow functions no alteran no crean un nuevo ámbito como function, por lo que el uso de this en
+    // arrow functions apunta al objeto padre y no a la función.
+    
+
+
+    //Uso de bind para cambiar el contexto de this
+    (function(){
+        var obj = {
+            foo: function() {console.log('foo')},
+            bar: function() {
+                setTimeout(function() {
+                    console.log('>>>Uso de bind para cambiar el contexto de this');
+                    this.foo();
+                }.bind(this), 0);
+            }
+        };
+
+        obj.bar();
+    })();
+
+
+
+
+
+
+
+    //Uso de arrow functions para no alterar el contexto de this
+    //Las arrow function no alteran el contexto de this, es decir, las arrow funciton no tienen contexto
+    (function(){
+        var obj2 = {
+            foo: function() {console.log('foo-obj2')},
+            bar: function() {
+                setTimeout(() => {
+                    console.log('>>>Uso de arrow function para no cambiar contexto de this');
+                    this.foo();
+                }, 0);
+            }
+        };
+
+        obj2.bar();
+    })();
+
+
+
+
+
+
+
+    //Uso de call, apply y this para cambiar el contexto de this.
+    (function(){
+        console.log('>>>Uso de apply, call y bind para cambiar contexto de this');
+        var x = 'varx';
+        function fn(someText){
+            console.log(this.valueOf() + " " + someText);
+        }
+        var fn1 = fn.bind(x);
+        fn1('con bind');
+        fn.apply(x,['con apply'])
+        fn.call(x, 'con call');
+    })();
+
+
+
+
+
+
+    //Uso de variables globales
+    (function(){
+        console.log('>>>Variables Globales');
+        var x = 5;
+        function fn(){
+            var x = 6;
+            console.log(x);
+            return x;
+        }
+        x = 1;
+        console.log(fn());
+    })();
+
+
+
+
+
+
+
+    //Ejercicio tick-tock con uso de flag boolean
+    (function(){
+        console.log('>>>Ejercicio: tick-tock sin if con boolean flag');
+        var flag = false;
+        var text = ['tick','tock'];
+        function fn(){
+            var i = +flag; // "+" unary operator. More info https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Unary_plus_()
+            console.log(text[i]);
+            flag = !flag;
+        }
+        fn();
+        fn();
+        fn();
+        fn();
+    })();
+
+
+
+
+
+
+
+    //Ejercicio tick-tock con uso de mod 2
+    (function(){
+        console.log('>>>Ejercicio: tick-tock sin if con mod 2');
+        var cont = 2;
+        var text = ['tick','tock'];
+        function fn(){
+            var i = cont % 2;
+            console.log(text[i]);
+            cont++;
+        }
+        fn();
+        fn();
+        fn();
+        fn();
+    })();
+
+
+
+
+
+
+
+    //Uso de clases en ES6
+    (function(){
+        console.log('>>>Clases:');
+        class Libro {
+            constructor(pages = 0, name = 'undefined', author = 'undefined'){
+                this.pages = pages;
+                this.name = name;
+                this.author = author;
+            }
+
+            getInfo(){
+                return `pages: ${this.pages}, name: ${this.name}, author: ${this.author}`;
+            }
+        }
+
+        var libro = new Libro(103, 'Javascript Ninja', 'John Michael');
+        console.log(libro.getInfo());
+    })();
+
+
+
+
+
+
+    //Destructuración de arrays
+    (function(){
+        console.log('>>>Destructuración de arrays');
+        var arr = ['Juan','Pedro','Manuel'];
+        var [a,b,c] = arr;
+
+        console.log(a);
+        console.log(b);
+    })();
+
+
+
+
+
+
+
+    //Destructuración de objetos
+    (function(){
+        console.log('>>>Destructuración de objetos');
+        var obj = {nombre: 'Juan', apellido: 'Maestro'};
+        var {nombre, apellido} = obj;
+        console.log(apellido);
+
+        var obj2 = {nombre: 'Juanito', apellido: 'Bandolero'};
+        var {name, lastname} = obj2;
+        console.log(name);
+    })();
+
+
+
+
+
+
+
+
+    //Destructuración de arrays retornados por functiones
+    (function(){
+        console.log('>>>Destructuración de arrays retornado por funciones');
+        var foo = function(){
+            return ['Carlos','Esteban'];
+        };
+
+        var [p1,p2] = foo();
+        console.log(p1);
+        console.log(p2);
+    })();
+
+
+
+
+
+
+    //Clousures
+    (function(){
+        console.log('>>>Clousures: variable en clousure se mantiene en memoria');
+        function decirHola(nombre){
+            var texto = `Hola ${nombre}`;
+            var imprimir = function (){
+                console.log(texto);
+            }
+            return imprimir;
+        }
+
+        var saludar = decirHola('Andrés');
+        saludar();   
+    })();
+
+
+
+
+
+    (function(){
+        console.log('>>>Clousures: la referencia a las variables se mantiene, sin volver a ejecutar el bloque de código no retornado');
+        function num(){
+            var num = 1;
+            var mostrar = function(){
+                console.log(num);
+            }
+            num++;
+            return mostrar;
+        }
+
+        var numero = num();
+        numero();
+        numero();
+    })();
+
+
+
+    (function(){
+        console.log('>>>Clousures: modificar valores referenciados en clousure despues de retorno de función');
+        function numeros(){
+            var num = 12;
+            var obj = {
+                imprimir: function(){
+                    console.log(num);
+                },
+                aumentar: function(){
+                    num++;
+                },
+                disminuir: function(){
+                    num--;
+                }
+            };
+            return obj;
+        }
+
+        var numb = numeros();
+        numb.imprimir();
+        numb.aumentar();
+        numb.aumentar();
+        numb.imprimir();
+        numb.disminuir();
+        numb.imprimir();
+    })();
+
+
+
+
+    (function (){
+        console.log('>>>Clousure con ciclo for');
+        function construyeLista(lista){
+            var resultado = [];
+            for (var i = 0; i < lista.length; i++) {
+                var item = `item: ${lista[i]}`;
+                resultado.push(function (){console.log(item)});
+            }
+            return resultado;
+        }
+
+        function testLista(){
+            var fnlista = construyeLista([1,2,3]);
+            for (var i = 0; i < fnlista.length; i++) {
+                fnlista[i]();
+            }
+        }
+
+        testLista();
+    })();
+
+
+
+
+    (function(){
+        console.log('>>>Clousure con acceso a variable declarada después de retorno');
+        function fun(){
+            var func = function(){
+                console.log(num);
+            };
+            var num = 10;
+            return func;
+        }
+        var fn = fun();
+        fn();
+    })();
+
+
+
+
+    (function(){
+        console.log('>>>Clousures: clousures separados (se crea un nuevo clousure con independencia de variables cada vez que se ejecuta la función)');
+        function crearClousure(someNum, someRef){
+            var num = someNum;
+            var arr = [1,2,3];
+            var ref = someRef;
+            return function(x){
+                num += x;
+                arr.push(num);
+                console.log(`num: ${num} \narray: ${arr.toString()}\nref.someVar: ${ref.someVar}`);
+            }
+        }
+
+        var clousure1 = crearClousure(10, {someVar: 'clousure-1'});
+        var clousure2 = crearClousure(20, {someVar: 'clousure-2'});
+
+        clousure1(1);
+        clousure2(5);
+    })();
+
+    
+
+
+    /*
+    * La exportación e importación de módulos es una nueva función de ES6 que aún no soportan los
+    * navegadores. Su uso es sencillo, para exportar:
+    * export function sayHello() {...}
+    * export default nameObject
+    * module.exports = {}
+    *
+    * Para importar:
+    * import { module1 } from './some/path/file.js';
+    * import 'module1' from './some/path/file.js';
+    * import 'module1', { module2, module3 } from './some/path/file.js';
+    */
+</script>

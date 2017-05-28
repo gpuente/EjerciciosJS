@@ -1,0 +1,35 @@
+<script>
+    function sumAsync(val1, val2, callback){
+        console.log('inicia proceso de suma');
+        setTimeout(function() {
+            callback(null, val1 + val2);
+        }, 1000);
+    }
+
+
+    let num1 = 5;
+    let num2 = 10;
+
+    /*
+    sumAsync(num1, num2, (err, res) => {
+        if(err) console.log('ha ocurrido un error');
+        console.log(res);
+    });*/
+
+
+    console.log('suma ordenada');
+
+    let contador = 1;
+
+    sumAsync(num1, num2, function useSuma(err, res) {
+        if(err) console.log(err);
+        console.log(res);
+        contador++;
+        num1++;
+        if(contador <= 10){
+            sumAsync(num1, num2, useSuma);
+        }else{
+            console.log('fin de proceso');
+        }
+    });
+</script>
